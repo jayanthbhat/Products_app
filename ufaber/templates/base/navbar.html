@@ -1,0 +1,76 @@
+{% load static %}
+{% load i18n %}
+<style>
+   
+
+    #navlogo{
+    width: 3rem;
+    height: 3rem;
+    align-self: center;
+    margin-left: 5rem;
+    cursor: pointer;
+    color: white;
+    }
+
+
+.Navbar img {
+
+}
+
+    #ndropdown .dropdown-toggle::after {
+      display:none !important;
+    }
+
+</style>
+
+
+<!--Navbar -->
+<nav class="mb-1 navbar navbar-expand-lg navbar-dark blue lighten-1">
+
+
+
+
+<a href="#"  class="brand-logo"></a>
+  <a class="navbar-brand ml-3" href=""><strong></strong></a>
+
+  
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+    aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+    <ul class="navbar-nav ml-auto" id="navbar-items">
+      {% if user.is_authenticated %}
+      <li class="nav-item  dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+           <i class="fas fa-user"></i> {% trans "Accounts" %}
+        </a>
+        
+        <div class="dropdown-menu dropdown-menu-lg-right dropdown-primary"
+          aria-labelledby="navbarDropdownMenuLink-55">
+          
+
+         
+          
+        </div>
+      </li>
+
+      {% endif %}
+
+  
+    </ul>
+  </div>
+  
+</nav>
+<!--/.Navbar -->
+
+
+
+
+
+
+
+

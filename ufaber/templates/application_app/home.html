@@ -1,0 +1,247 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% block title %} Procuct lists {% endblock title %}
+
+
+{% block css %}
+<!-- MDBootstrap Datatables  -->
+<link href="{% static 'mdb4.8.1/css/addons/datatables.min.css' %}" rel="stylesheet">
+
+
+<style>
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_asc_disabled:after,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc:after,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_desc_disabled:after,
+table.dataTable thead .sorting_desc_disabled:before {
+  bottom: .5em;
+}
+
+tr{
+  cursor: pointer;
+  }
+
+#alert_on{
+    display:none;
+}
+</style>
+
+{% endblock css %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+<div class="card card-cascade narrower mx-auto" style="width:95%;padding-left:5%;padding-right:5%;margin-top:5%;">
+
+
+  <!--Card header-->
+  <div
+  class="view view-cascade gradient-card-header primary-color narrower py-2 mx-4 mb-3 d-flex mx-auto align-items-center mdb-heading-title card-heading-width">
+  <div class="row text-center report-width-108">
+      <div class="col report-width-108">
+          <h3>uFaber Products List</h3>
+      </div>
+  </div>
+</div>
+  <!--/Card header-->
+
+    <!-- Card content -->
+  <div class="card-body card-body-cascade">
+
+    
+        
+ </div>
+    <table id="dt-horizontal-scroll" class="table" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="th-sm">Product Name
+            </th>
+            <th class="th-sm">Category
+            </th>
+            <th class="th-sm">Sub-Category
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.category.category_name }}</td>
+                    <td>{{ product.subcategory.subcategory_name }}</td>
+                </tr>
+                
+            {% endfor %}
+    
+        </tbody>
+      </table>
+      <form method="POST" id="new_product_forms">
+        {% csrf_token %}
+        <h4>Add Products</h4>
+      <table class="table text-center" cellspacing="0" width="100%">
+        <tr>
+           <td>
+               <div class="form-group col-md-4 mb-0">
+                   <label for="form1">Product Name</label>
+                   <br><br>
+                   <input type="text" id="product_name" class="form-control">
+                   <br><br>
+               </div>
+           </td>
+           <td>
+               <label for="id_category_dropdown" class="col-form-label ">Select Category</label>
+               <br>
+               <select id="id_category" name="category_name" class="mdb-select md-form colorful-select dropdown-primary">
+                           <option value=0 selected>---</option>
+                           {% for category in categories %}
+                               <option value={{ category.pk }}>
+                                   {{ category.category_name }}
+   
+                               </option>
+                           {% endfor %}
+                           
+               </select>
+               <span id="lblError_panchayat_name color-red-mdb"></span>
+   
+           </td>
+           <td>
+               <label for="id_subcategory_dropdown" class="col-form-label ">Select SubCategory</label>
+                   <br>
+                   <select id="id_subcategory" name="subcategory_name" class="mdb-select md-form colorful-select dropdown-primary">
+                       <option value=0 selected>---</option>
+                                   {% for sub_category in sub_categories %}
+                                       <option value={{ sub_category.pk }}>
+                                           {{ sub_category.subcategory_name }}
+   
+                                       </option>
+                                   {% endfor %}
+                   </select>
+                       
+                   <span id="lblError_ward_name color-red-mdb"></span>
+           </td>
+           <td><button id="add-product" type="submit" class="btn btn-primary">Save</button></td>
+        </tr>
+    </table>
+</form>
+   
+</div>
+</div>
+</div>
+<!-- Central Modal Small -->
+<div class="modal fade" id="centralModalSm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+
+    <!-- Change class .modal-sm to change the size of the modal -->
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+
+
+        <div class="modal-content">
+            <div class="modal-header mis-modal-header-color">
+                <h5 class="modal-title w-100" id="myModalLabel"><strong>Alert</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <h6></h6>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col text-center">
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Central Modal Small -->
+{% endblock content %}
+{% block javascript %}
+
+<script type="text/javascript" src="{% static 'mdb4.8.1/js/addons/datatables.min.js' %}"></script>
+<script>
+
+var subcategory_json={{ subcategory_json | safe }};
+
+
+
+$('#id_category').on('change', function() {
+        var category_value
+        category_value = $("#id_category").val()
+        if (category_value == 0){            
+            $('#id_subcategory option[value!=""]').remove()
+            $("#id_subcategory").append('<option value=' +0+ '>' + "------" + '</option>');
+        }
+        else{
+
+            var filtered_subcategory_json= subcategory_json.filter(a=>a.category==String(category_value))
+            console.log(filtered_subcategory_json)
+           
+
+            $('#id_subcategory option[value!=""]').remove();
+            $("#id_subcategory").append('<option value=' +0+ '>' + "---" + '</option>');
+            $.each(filtered_subcategory_json,function(i, obj) 
+            {
+                $("#id_subcategory").append('<option value=' + obj.subcategory_id + '>' + obj.subcategory_name + '</option>');
+            });
+        }
+})
+
+             
+   
+    $("#new_product_forms").on('submit',function(e){   
+            $.ajax({
+                    url: "/api/add-products/",
+                    type: 'POST',
+                    headers : {
+                            "Content-Type": "application/json",
+                            'X-CSRFToken' : '{{ csrf_token }}',
+                        },
+                    data: JSON.stringify({
+                        product_name: $("#product_name").val(),
+                        category: $("#id_category").val(),
+                        subcategory: $("#id_subcategory").val()
+                    }),
+                    success: function (response) {
+                        console.log(response)
+                        }
+                }) 
+});
+
+$(document).ready(function () {
+  
+  $('#dt-horizontal-scroll').dataTable({
+    "fnInitComplete": function () {
+      var myCustomScrollbar = document.querySelector('#dt-horizontal-scroll_wrapper .dataTables_scrollBody');
+      var ps = new PerfectScrollbar(myCustomScrollbar);
+    },
+    "scrollX": true,
+    fixedColumns:   {
+      leftColumns: 1,
+      rightColumns: 1
+  }})
+  $('#form-add').on("click",function(){  
+        $("#product-form").css('visibility','visible')
+    })
+
+});
+  
+</script>
+
+
+{% endblock javascript %}
