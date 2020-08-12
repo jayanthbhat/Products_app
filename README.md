@@ -4,6 +4,15 @@
 
 ## Add Products by filtering on category and subcategory using django forms and django templating.
 
+localhost urls:
+
+HOme page :
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/api/add-products/ 
+http://127.0.0.1:8000/api/list-categories/ 
+http://127.0.0.1:8000/api/list-subcategories/ 
+http://127.0.0.1:8000/api/list-product-categories/ 
+http://127.0.0.1:8000/api/list-product-subcategories/ 
 
 ### 0 - Create a virtual env for the project 
 ### 1 - Django Model for categories 
